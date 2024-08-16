@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "386954282891",
+    "project_id": "phoneauthsample-a67af",
+    "storage_bucket": "phoneauthsample-a67af.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:386954282891:android:10e0d1ea8d1efd841f118e",
+        "android_client_info": {
+          "package_name": "app.totalx.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-0wKAYgQ_IY3gEqdHrYGt3ScW25SXv_E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
