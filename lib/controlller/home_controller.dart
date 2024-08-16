@@ -1,4 +1,6 @@
+import 'dart:developer';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:totalx/model/data_model.dart';
@@ -10,6 +12,12 @@ class HomeController extends ChangeNotifier {
   File? selectedImage;
   List<DataModel> allUsers = [];
   List<DataModel> filteredUsers = [];
+  String selectedFilter = 'all';
+  DocumentSnapshot? lastGoc;
+  final int pageSize = 10;
+  bool isLoading = false;
+  bool hasMore = true;
+  bool isLoadingMore = false;
 
   HomeController() {
     fetchUsers();
@@ -23,28 +31,63 @@ class HomeController extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print('Error picking image: $e');
+      log('Error picking image: $e');
     }
   }
 
-  void fetchUsers() {
+  Future<void> fetchUsers({bool isLoadMore = false}) async {
+    if (isLoading || !hasMore) return;
+
+    isLoading = true;
     try {
-      dataService.getUsers().listen((List<DataModel> users) {
-        allUsers = users;
-        filteredUsers = List.from(allUsers);
+      final users = dataService.getUsers(
+        lastDocument: isLoadMore ? lastGoc : null,
+        pageSize: pageSize,
+      );
+
+      users.listen((snaphot) {
+        final users = snaphot.docs.map((doc) {
+          Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+          return DataModel.fromJson(data);
+        }).toList();
+
+        hasMore = users.length == pageSize;
+        if (users.isEmpty) {
+          hasMore = false;
+        } else {
+          if (isLoadMore) {
+            allUsers.addAll(users);
+            log('${allUsers.length}');
+          } else {
+            allUsers = users;
+          }
+          lastGoc = snaphot.docs.isNotEmpty ? snaphot.docs.last : null;
+          filterByAge();
+        }
+        isLoading = false;
         notifyListeners();
       });
     } catch (e) {
-      print('Error fetching users: $e');
+      log('Error fetching users: $e');
+      isLoading = false;
     }
+  }
+
+  Future<void> refreshUsers() async {
+    lastGoc = null;
+    hasMore = true;
+    pageSize == 10;
+    fetchUsers();
   }
 
   void searchUsers(String query) {
     if (query.isEmpty) {
       filteredUsers = List.from(allUsers);
     } else {
-      filteredUsers = allUsers.where((user) =>
-          user.name!.toLowerCase().contains(query.toLowerCase())).toList();
+      filteredUsers = allUsers
+          .where(
+              (user) => user.name!.toLowerCase().contains(query.toLowerCase()))
+          .toList();
     }
     notifyListeners();
   }
@@ -55,10 +98,43 @@ class HomeController extends ChangeNotifier {
     required File imageFile,
   }) async {
     try {
-      await dataService.addUserCollection(name: name, age: age, imageFile: imageFile);
-      fetchUsers();
+      await dataService.addUserCollection(
+          name: name, age: age, imageFile: imageFile);
+      refreshUsers();
     } catch (e) {
-      print('Error adding user to Firestore: $e');
+      log('Error adding user to Firestore: $e');
+    }
+  }
+
+  void setFilter(String filter) {
+    selectedFilter = filter;
+    filterByAge();
+    notifyListeners();
+  }
+
+  void filterByAge() {
+    if (selectedFilter == 'all') {
+      filteredUsers = List.from(allUsers);
+    } else if (selectedFilter == 'elder') {
+      filteredUsers = allUsers
+          .where((user) =>
+              int.tryParse(user.age ?? '0') != null &&
+              int.parse(user.age!) >= 60)
+          .toList();
+    } else if (selectedFilter == 'younger') {
+      filteredUsers = allUsers
+          .where((user) =>
+              int.tryParse(user.age ?? '0') != null &&
+              int.parse(user.age!) < 60)
+          .toList();
+    }
+  }
+
+  Future<void> loadMore() async {
+    if (hasMore) {
+      isLoadingMore = true;
+      await fetchUsers(isLoadMore: true);
+      isLoadingMore = false;
     }
   }
 }

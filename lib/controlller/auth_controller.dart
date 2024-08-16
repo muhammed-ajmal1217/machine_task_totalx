@@ -8,7 +8,7 @@ class AuthProviders extends ChangeNotifier {
   signinWithPhone(
       {required String phoneNumber, required BuildContext context}) async {
     try {
-      log('$phoneNumber');
+      log(phoneNumber);
       await authService.signinWithPhone(
           phoneNumber: phoneNumber, context: context);
     } catch (e) {

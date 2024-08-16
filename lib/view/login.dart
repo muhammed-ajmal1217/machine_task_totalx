@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
                     Container(
                       height: size.height*0.23,
                       width: size.width*0.36,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           image: DecorationImage(
                               image: AssetImage('assets/phone.png'))),
                     ),
@@ -43,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
                             fontSize: 18, fontWeight: FontWeight.w500),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     TextFormField(
@@ -56,20 +55,20 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         contentPadding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                            const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
-                    Text(
+                    const Text(
                         'By Continuing, I agree to TotalX’s Terms and condition & privacy policy'),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     InkWell(
                       onTap: () {
-                        controller.signinWithPhone(phoneNumber: '+91'+phoneController.text, context: context);
+                        controller.signinWithPhone(phoneNumber: '+91${phoneController.text}', context: context);
                       },
                       child: Container(
                         height: 60,

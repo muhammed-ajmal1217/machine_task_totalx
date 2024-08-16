@@ -7,13 +7,19 @@ class DataService {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseStorage storage = FirebaseStorage.instance;
 
-  Stream<List<DataModel>> getUsers() {
-    return firestore.collection('users_collection').snapshots().map((querySnapshot) {
-      return querySnapshot.docs.map((doc) {
-        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-        return DataModel.fromJson(data);
-      }).toList();
-    });
+  Stream<QuerySnapshot> getUsers({
+    DocumentSnapshot? lastDocument,
+    int pageSize = 10,
+  }) {
+    Query query = firestore.collection('users_collection')
+        .orderBy('name') 
+        .limit(pageSize);
+
+    if (lastDocument != null) {
+      query = query.startAfterDocument(lastDocument);
+    }
+
+    return query.snapshots();
   }
 
   Future<String> uploadImage(File image) async {
@@ -46,4 +52,8 @@ class DataService {
       throw Exception('Error adding user to Firestore: $e');
     }
   }
+
 }
+
+
+

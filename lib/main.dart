@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:totalx/controlller/auth_controller.dart';
 import 'package:totalx/controlller/home_controller.dart';
 import 'package:totalx/firebase_options.dart';
-import 'package:totalx/view/home/home.dart';
+import 'package:totalx/widgets/auth_gate.dart';
 
 void main()async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,9 +21,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => AuthProviders(),),
         ChangeNotifierProvider(create: (context) => HomeController(),),
       ],
-      child: MaterialApp(
+      child: const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomePage(),
+        home: AuthGate()
       ),
     );
   }

@@ -34,7 +34,7 @@ class AddDialogueBox extends StatelessWidget {
                 radius: 40,
                 backgroundImage: homePro.selectedImage != null
                     ? FileImage(File(homePro.selectedImage?.path ?? ''))
-                    : AssetImage('assets/profile_icon.png') as ImageProvider,
+                    : const AssetImage('assets/profile_icon.png') as ImageProvider,
               ),
               InkWell(
                 onTap: () {
@@ -42,7 +42,7 @@ class AddDialogueBox extends StatelessWidget {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        title: Text('Select Image'),
+                        title: const Text('Select Image'),
                         actions: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,13 +51,13 @@ class AddDialogueBox extends StatelessWidget {
                                 onTap: () {
                                   homePro.pickImage(ImageSource.camera);
                                 },
-                                child: Icon(Icons.camera_alt_outlined),
+                                child: const Icon(Icons.camera_alt_outlined),
                               ),
                               InkWell(
                                 onTap: () {
                                   homePro.pickImage(ImageSource.gallery);
                                 },
-                                child: Icon(Icons.image_outlined),
+                                child: const Icon(Icons.image_outlined),
                               ),
                             ],
                           )
@@ -71,10 +71,10 @@ class AddDialogueBox extends StatelessWidget {
                   width: 80,
                   decoration: BoxDecoration(
                       color: Colors.grey.withOpacity(0.4),
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(200),
                           bottomRight: Radius.circular(200))),
-                  child: Center(
+                  child: const Center(
                     child: Icon(
                       Icons.camera_alt_outlined,
                       color: Colors.white,
@@ -85,11 +85,11 @@ class AddDialogueBox extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         CustomTextField(nameController: nameController, hintText: 'Name'),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         CustomTextField(nameController: ageController, hintText: 'Age'),
-        SizedBox(height: 30),
+        const SizedBox(height: 30),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -104,13 +104,22 @@ class AddDialogueBox extends StatelessWidget {
             ),
             ElevatedButton(
               style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.blue)),
+                  backgroundColor: WidgetStateProperty.all(Colors.blue)),
               onPressed: () {
+                if (homePro.selectedImage == null) {
+                  return;
+                }else{
                 homePro.addUsersCollection(
                   name: nameController.text,
                   age: ageController.text,
                   imageFile: homePro.selectedImage!,
                 );
+                nameController.clear();
+                ageController.clear();
+                homePro.selectedImage==null;
+                }
+
+
                 Navigator.pop(context);
               },
               child: Text(

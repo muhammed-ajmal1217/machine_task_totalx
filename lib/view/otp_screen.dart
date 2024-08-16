@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
@@ -31,7 +30,7 @@ class OtpScreen extends StatelessWidget {
                   Container(
                     height: size.height * 0.23,
                     width: size.width * 0.36,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage('assets/otp.png'))),
                   ),
@@ -43,20 +42,26 @@ class OtpScreen extends StatelessWidget {
                           fontSize: 18, fontWeight: FontWeight.w500),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
-                  Text(
+                  const Text(
                       'Enter the verification code we just sent to your number +91 *******21.'),
-                  SizedBox(height: 10,),
+                  const SizedBox(height: 10,),
                   Center(
                     child: PinCodeTextField(
                       controller: otpController,
-                      pinTextStyle: TextStyle(fontSize: 17, color: Colors.red),
+                      pinTextStyle: const TextStyle(fontSize: 17, color: Colors.red),
+                      maxLength: 6,
+                      pinBoxWidth: size.width*0.13,
+                      pinBoxHeight: size.height*0.08,
+                      pinBoxRadius: 10,
+                      highlightColor: Colors.red,
+                      defaultBorderColor: Colors.grey,
                       onDone: (value) {},
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   InkWell(
@@ -78,8 +83,8 @@ class OtpScreen extends StatelessWidget {
                           )),
                     ),
                   ),
-                  SizedBox(height: 20,),
-                  Text("Don't Get OTP? Resend")
+                  const SizedBox(height: 20,),
+                  const Text("Don't Get OTP? Resend")
                 ],
               ),
             ),
@@ -99,7 +104,7 @@ class OtpScreen extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => HomePage(),
+                builder: (context) => const HomePage(),
               ));
         });
   }
